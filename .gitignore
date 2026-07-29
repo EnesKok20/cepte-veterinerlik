@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# ML / veri
+*.h5
+*.pt
+*.pth
+*.tflite
+*.onnx
+data/
+datasets/
+*.csv
+*.parquet
+runs/
+weights/
+
+# Ortam & gizli
+.env
+*.key
+secrets.*
+
+# Editör & sistem
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Mobil (ileride)
+*.apk
+*.aab
+build/
+.gradle/
+node_modules/
