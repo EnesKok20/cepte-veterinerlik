@@ -6,6 +6,13 @@ __pycache__/
 venv/
 env/
 .ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+*.db
+*.sqlite3
 
 # ML / veri
 *.h5
@@ -31,9 +38,16 @@ secrets.*
 .DS_Store
 Thumbs.db
 
-# Mobil (ileride)
+# Mobil (Flutter/Dart)
 *.apk
 *.aab
 build/
 .gradle/
 node_modules/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+ios/Pods/
+ios/.symlinks/
+android/.gradle/

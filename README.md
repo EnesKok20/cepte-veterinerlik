@@ -17,9 +17,9 @@ Tarım & hayvancılık için yapay zeka destekli mobil + web sürü yönetim sis
 
 ## 📖 Bu proje nedir?
 
-Bir çiftçinin ahırdaki hayvanlarını **kimliklendirmesi**, **sayması**, **sağlık ve verim geçmişini takip etmesi** ve veriden **akıllı uyarılar** alması için tasarlanmış bir sistemdir.
+Bir çiftçinin ahırdaki hayvanlarını **kimliklendirmesi**, **sayması**, **sağlık ve verim geçmişini takip etmesi** ve veriden **akıllı uyarılar** alması için tasarlanmış bir sistemdir. Proje olgunlaştıkça kapsam genişledi: artık sadece çiftlik değil, **bireysel evcil hayvan sahipleri** için de aynı uygulamada ayrı bir profil (kedi, köpek, kuş, tavşan, egzotik) sunuyor — kayıt sırasında profil tipi seçiliyor, arayüz ve özellikler ona göre şekilleniyor.
 
-Projenin ayırt edici yönü, hazır bir yapay zekayı tüketen bir uygulama olmaktan öte, **kendi modellerinin sıfırdan kurulup entegre edilmesidir.** İki farklı yapay zeka dünyasını bir arada kullanır: ahırda **görüntü işleme** (sürü sayımı) ve kayıt verisi üzerinde **tablo tabanlı makine öğrenmesi** (anomali tespiti, verim tahmini).
+Projenin ayırt edici yönü, hazır bir yapay zekayı tüketen bir uygulama olmaktan öte, **kendi modellerinin sıfırdan kurulup entegre edilmesidir.** İki farklı yapay zeka dünyasını bir arada kullanır: ahırda **görüntü işleme** (sürü sayımı) ve kayıt verisi üzerinde **tablo tabanlı makine öğrenmesi** (anomali tespiti, verim tahmini) — buna ek olarak semptom analizi için **CNN (Convolutional Neural Network — görüntüden özellik çıkaran evrişimli sinir ağı)** ve veteriner bilgi tabanıyla sohbet için **RAG (Retrieval-Augmented Generation — cevaba başlamadan önce ilgili dokümanı arayıp bulan, sonra o dokümana dayanarak cevap üreten yöntem)** de var.
 
 > Bitirme Projesi · Yazılım Mühendisliği · ~14 aylık gelişim süreci
 
@@ -157,26 +157,45 @@ Küpe no (ID) · Yaş · Cins (tür / ırk) · Cinsiyet · Sağlık durumu · Ge
 | Katman | Teknoloji |
 |--------|-----------|
 | Görüntü işleme (sayım) | YOLO ailesi (hazır model + ince ayar) |
-| Tablo ML (anomali, tahmin) | Python · scikit-learn / PyTorch _(netleştirilecek)_ |
+| Semptom analizi | PyTorch (CNN), kamp çalışmasından adapte |
+| Tablo ML (anomali, tahmin) | Python · scikit-learn / PyTorch |
+| RAG asistan | sentence-transformers (embedding) + ChromaDB (vektör veritabanı) + Hugging Face transformers (LLM) |
 | Model eğitim ortamı | Google Colab (ücretsiz GPU) |
-| Backend / API | _(netleştirilecek)_ |
-| Veritabanı | İlişkisel _(motor netleştirilecek)_ |
-| Mobil | _(netleştirilecek — NFC için native taraf düşünülecek)_ |
-| Web | _(netleştirilecek)_ |
+| Backend / API | Python 3.11 · FastAPI (async) |
+| ORM / migration | SQLAlchemy 2.0 (async) · Alembic |
+| Veritabanı | PostgreSQL 16 (`tr_TR.UTF-8` collation) |
+| Cache / rate limit | Redis 7 |
+| Kimlik doğrulama | JWT (access + refresh) + bcrypt |
+| Mobil + Web | Flutter 3.x (Dart) · Riverpod · go_router |
+| Bildirim | Firebase Cloud Messaging |
+| Konum | Google Maps |
+| Deploy | Docker + docker-compose (lokal) |
+| Test / CI | pytest + GitHub Actions |
 
 ---
 
 ## 🗺️ Yol haritası
 
-- [x] Proje kapsamı ve veri modeli
-- [ ] **Sürü sayımı** (görüntü işleme) — ilk hedef
-- [ ] ML antrenman turu (uçtan uca boru hattı öğrenimi)
-- [ ] Anomali tespiti (tablo ML)
-- [ ] Verim / büyüme tahmini (tablo ML)
-- [ ] Akıllı hatırlatmalar (aşı · doğum · ilaç bekleme)
-- [ ] Kimlik: QR küpe → sonra NFC
-- [ ] Mobil + web arayüz
-- [ ] Backend & veritabanı entegrasyonu
+**AI temeli (kamp çalışmaları, `notebooks/` — detay: [`AI_YOL_HARITASI.md`](AI_YOL_HARITASI.md))**
+
+- [x] Sürü sayımı (YOLO ile görüntü işleme)
+- [x] ML antrenman turu, verim tahmini (data leakage deneyi dahil)
+- [x] Anomali tespiti (Isolation Forest)
+- [x] RAG veteriner asistanı — kişiselleştirme, anomali zinciri, konuşma hafızası, gerçek PDF bilgi tabanı
+- [x] Hava durumu bazlı öneriler + tarih tabanlı akıllı hatırlatmalar
+- [ ] _(opsiyonel/ertelendi)_ Sürü sayımı modelini kendi verimizle fine-tune etme
+
+**Uygulama inşası (20 gün / 80 commit — `docs/defter/`)**
+
+- [ ] Backend iskeleti, Docker, veritabanı, Alembic
+- [ ] Auth (JWT), kullanıcı profilleri (bireysel / çiftlik)
+- [ ] Hayvan CRUD, çiftlik yönetimi, fotoğraf upload
+- [ ] Veteriner arama, randevu, aşı takibi, süt kaydı
+- [ ] NFC + QR kimliklendirme, kayıp hayvan senaryosu
+- [ ] Sürü analitiği dashboard
+- [ ] AI modülünün backend'e entegrasyonu (CNN semptom analizi + RAG sohbet)
+- [ ] Flutter mobil + web arayüz
+- [ ] CI/CD, kapsamlı test, `v1.0.0` release
 - [ ] _(İleride)_ Soy ağacı & burun deseni ile kimlik tanıma
 
 ---
