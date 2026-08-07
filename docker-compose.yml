@@ -1,0 +1,69 @@
+services:
+  api:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://cepte:${POSTGRES_PASSWORD:-cepte_dev_only}@postgres:5432/cepte_veterinerlik
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  postgres:
+    build:
+      context: ./docker/postgres
+    environment:
+      POSTGRES_DB: cepte_veterinerlik
+      POSTGRES_USER: cepte
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cepte_dev_only}
+      POSTGRES_INITDB_ARGS: "--locale=tr_TR.UTF-8 --lc-collate=tr_TR.UTF-8 --lc-ctype=tr_TR.UTF-8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cepte -d cepte_veterinerlik"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+
+volumes:
+  postgres_data:
+  redis_data:
