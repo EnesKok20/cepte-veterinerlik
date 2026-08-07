@@ -32,9 +32,13 @@ weights/
 *.key
 secrets.*
 
-# Editör & sistem
-.vscode/
+# Editör & sistem — launch.json/settings.json paylaşılıyor, gerisi kişisel
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
+*.iml
 .DS_Store
 Thumbs.db
 

@@ -1,0 +1,22 @@
+{
+  "dart.flutterSdkPath": "C:\\src\\flutter",
+  "search.exclude": {
+    "**/.venv": true,
+    "**/build": true,
+    "**/.dart_tool": true,
+    "backend/uv.lock": true,
+    "mobile/pubspec.lock": true
+  },
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.selectionHighlight": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off",
+    "editor.rulers": [100]
+  },
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.rulers": [100]
+  }
+}
